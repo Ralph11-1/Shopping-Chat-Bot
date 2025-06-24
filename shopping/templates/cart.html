@@ -1,0 +1,27 @@
+<!-- cart.html -->
+{% extends "layout.html" %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+<h2>Your Cart</h2>
+{% if cart %}
+<table>
+    <tr>
+        <th>Name</th><th>Price</th><th>Qty</th><th>Subtotal</th><th>Action</th>
+    </tr>
+    {% for item in cart %}
+    <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.price }}</td>
+        <td>{{ item.qty }}</td>
+        <td>{{ item.subtotal }}</td>
+        <td><a href="/remove_from_cart/{{ item.id }}" class="btn-danger">Remove</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<p>Total: ₹{{ total }}</p>
+<a href="/place_order" class="btn">Place Order</a>
+{% else %}
+<p>Your cart is empty.</p>
+{% endif %}
+{% endblock %}
+

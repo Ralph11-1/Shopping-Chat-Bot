@@ -1,0 +1,38 @@
+
+<!-- admin_dashboard.html -->
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p>Welcome, {{ session['user']['name'] }}!</p>
+<a href="/add_product" class="btn">Add New Product</a>
+<h2>Manage Products</h2>
+<table border="1" cellpadding="10">
+  <tr>
+    <th>Image</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Location</th>
+    <th>Actions</th>
+  </tr>
+  {% for product in products %}
+  <tr>
+    <td><img src="{{ url_for('static', filename='uploads/' + product.image) }}" height="50"></td>
+    <td>{{ product.name }}</td>
+    <td>{{ product.price }}</td>
+    <td>
+      {% if product.location_image %}
+        <img src="{{ url_for('static', filename='locations/' + product.location_image) }}" height="50">
+      {% else %}
+        Not Set
+      {% endif %}
+    </td>
+    <td>
+      <a href="/edit_product/{{ product.id }}">Edit</a> |
+      <a href="/delete_product/{{ product.id }}" onclick="return confirm('Delete this product?')">Delete</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

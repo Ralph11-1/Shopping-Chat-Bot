@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block title %}Product Location{% endblock %}
+{% block content %}
+<h2>Location for {{ product.name }}</h2>
+{% if product.location_image %}
+    <img src="{{ url_for('static', filename='locations/' + product.location_image) }}" alt="Location" style="width: 100%; max-width: 600px;">
+	<h3> Route path </h3>
+	<p>
+	{{product.rpath}}
+	</p>
+{% else %}
+    <p>No location image available.</p>
+{% endif %}
+<a href="/" class="btn">Back to Products</a>
+{% endblock %}

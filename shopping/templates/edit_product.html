@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block title %}Product Location{% endblock %}
+{% block content %}
+
+<h2>Edit Product</h2>
+<form method="POST" enctype="multipart/form-data">
+  Name: <input type="text" name="name" value="{{ product.name }}"><br><br>
+  Price: <input type="text" name="price" value="{{ product.price }}"><br><br>
+  Image: <input type="file" name="image"><br>
+  {% if product.image %}
+    <img src="{{ url_for('static', filename='uploads/' + product.image) }}" width="600" height="800"><br>
+  {% endif %}<br>
+  Location Image: <input type="file" name="location_image"><br>
+  {% if product.location_image %}
+    <img src="{{ url_for('static', filename='locations/' + product.location_image) }}" width="600" height="800"><br>
+  {% endif %}<br>
+  <button type="submit">Update</button>
+</form>
+{% endblock %}

@@ -1,0 +1,127 @@
+<!-- layout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-Shop{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script>
+const products = [
+  {% if products %}
+    {% for product in products %}
+      {
+        id: {{ product.id }},
+        name: "{{ product.name | lower }}",
+        hasLocation: {{ 'true' if product.location_image else 'false' }}
+      },
+    {% endfor %}
+  {% endif %}
+];
+
+let recognition;
+
+function initVoiceRecognition() {
+    if (!('webkitSpeechRecognition' in window)) {
+        console.log("Speech recognition not supported.");
+        return;
+    }
+
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = false;
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+        console.log("Heard:", transcript);
+		
+		if (transcript.includes("clear cart") || transcript.includes("empty cart")) {
+        window.location.href = "/clear_cart";
+        return;
+    }
+
+        // Global voice commands
+        if (transcript.includes("show cart") || transcript.includes("go to cart")) {
+            window.location.href = "/cart";
+            return;
+        }
+        if (transcript.includes("go back") || transcript.includes("go to home") || transcript.includes("go to index")) {
+            window.location.href = "/";
+            return;
+        }
+
+        // Product-based commands
+        const matched = products.find(p => transcript.includes(p.name));
+        if (matched) {
+            if (transcript.includes("add") && transcript.includes("cart")) {
+                window.location.href = "/add_to_cart/" + matched.id;
+            } else if ((transcript.includes("location") || transcript.includes("show")) && matched.hasLocation) {
+                window.location.href = "/product_location/" + matched.id;
+            } else {
+                console.log("Product matched but unclear action.");
+            }
+        } else {
+            console.log("No matching product for: " + transcript);
+        }
+    };
+
+    recognition.onerror = function(event) {
+        console.error("Speech recognition error:", event.error);
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            alert("Microphone permission denied.");
+        } else {
+            restartVoiceRecognition();
+        }
+    };
+
+    recognition.onend = function() {
+        // Restart unless user manually stopped
+        restartVoiceRecognition();
+    };
+
+    recognition.start();
+}
+
+function restartVoiceRecognition() {
+    setTimeout(() => {
+        try {
+            recognition.start();
+        } catch (e) {
+            console.log("Recognition restart error:", e.message);
+        }
+    }, 1000);
+}
+
+window.onload = function() {
+    initVoiceRecognition();
+};
+</script>
+
+</head>
+<body>
+    <div class="navbar">
+        <a href="/">Home</a>
+        {% if session.get('user') %}
+            {% if session['user']['role'] == 'admin' %}
+                <a href="/admin">Admin</a>
+                <a href="/add_product">Add Product</a>
+				<a href="/add_product_location">Add Product Location</a>
+            {% else %}
+                <a href="/customer">Dashboard</a>
+                <a href="/cart">Cart</a>
+                <a href="/orders">My Orders</a>
+            {% endif %}
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+        {% endif %}
+    </div>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
+
+

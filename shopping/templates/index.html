@@ -1,0 +1,22 @@
+<!-- index.html -->
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h2>Products</h2>
+<div class="product-list">
+    {% for product in products %}
+    <div class="product-card">
+        <img src="{{ url_for('static', filename='uploads/' + product['image']) }}" alt="{{ product['name'] }}">
+        <h3>{{ product['name'] }}</h3>
+        <p>Price: ₹{{ product['price'] }}</p>
+        {% if session.get('user') and session['user']['role'] == 'customer' %}
+		{% if product.location_image %}
+    <a href="{{ url_for('product_location', product_id=product.id) }}" class="btn">View Location</a>
+{% endif %}
+            <a href="/add_to_cart/{{ product['id'] }}" class="btn">Add to Cart</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+	<button onclick="startVoiceCommand()">🎤 Voice Command</button>
+</div>
+{% endblock %}

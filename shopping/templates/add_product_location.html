@@ -1,0 +1,18 @@
+<!-- add_product_location.html -->
+{% extends "layout.html" %}
+{% block title %}Add Product Location{% endblock %}
+{% block content %}
+<h2>Add Product Location</h2>
+<form method="POST" enctype="multipart/form-data">
+    <label>Select Product:</label>
+    <select name="product_id" required>
+        {% for product in products %}
+        <option value="{{ product['id'] }}">{{ product['name'] }}</option>
+        {% endfor %}
+    </select>
+    <label>Upload Location Image:</label>
+    <input type="file" name="location_image" accept="image/*" required>
+    <input type="text" name="desc" placeholder="Enter Route Path" required>
+    <button type="submit">Add Location</button>
+</form>
+{% endblock %}
