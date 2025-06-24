@@ -1,4 +1,4 @@
-#Design and Development of anAutonomous Shopping AssistantChatbot for Retail Stores
+# Design and Development of an Autonomous Shopping AssistantChatbot for Retail Stores
 <br>
 This project focuses on the design and development of an autonomous voice-enabled shopping assistant
 chatbot for retail stores, aiming to enhance the in-store experience through hands-free interaction. Using speech
